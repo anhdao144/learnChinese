@@ -25,71 +25,170 @@
             border-radius: 5px;
             font-size: 14px;
         }
+        .audio-control {
+            margin: 10px 0;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
     </style>
+    <script>
+        function checkAnswers() {
+            // Đáp án đúng cho từng phần
+            const listeningAnswers = {
+                q1: "a",
+                q2: "a",
+                q3: "a",
+                q4: "a",
+                q5: "a"
+            };
+
+            const readingAnswers = {
+                fill1: "你",
+                fill2: "的",
+                fill3: "学习",
+                fill4: "在",
+                fill5: "五",
+                translate1: "Xin chào! Tôi tên là Vương Minh.",
+                translate2: "Bạn ăn gì?",
+                translate3: "Cái này bao nhiêu tiền?",
+                match1: "b",
+                match2: "c",
+                match3: "a",
+                match4: "d",
+                match5: "e"
+            };
+
+            const writingAnswers = {
+                sentence1: "你去哪儿？",
+                sentence2: "他是我的老师。",
+                sentence3: "我学习汉语。"
+            };
+
+            let score = 0;
+            let total = 0;
+
+            // Chấm điểm phần nghe hiểu
+            for (const [key, correctAnswer] of Object.entries(listeningAnswers)) {
+                const userAnswer = document.querySelector(`input[name="${key}"]:checked`);
+                const feedback = document.getElementById(`${key}-feedback`);
+                total++;
+
+                if (userAnswer && userAnswer.value === correctAnswer) {
+                    score++;
+                    feedback.textContent = "Đúng";
+                    feedback.className = "correct";
+                } else {
+                    feedback.textContent = `Sai (Đáp án: ${correctAnswer})`;
+                    feedback.className = "incorrect";
+                }
+            }
+
+            // Chấm điểm phần đọc hiểu: điền từ
+            for (let i = 1; i <= 5; i++) {
+                const userAnswer = document.getElementById(`fill${i}`).value.trim();
+                const feedback = document.getElementById(`fill${i}-feedback`);
+                total++;
+
+                if (userAnswer === readingAnswers[`fill${i}`]) {
+                    score++;
+                    feedback.textContent = "Đúng";
+                    feedback.className = "correct";
+                } else {
+                    feedback.textContent = `Sai (Đáp án: ${readingAnswers[`fill${i}`]})`;
+                    feedback.className = "incorrect";
+                }
+            }
+
+            // Chấm điểm phần đọc hiểu: dịch câu
+            for (let i = 1; i <= 3; i++) {
+                const userAnswer = document.getElementById(`translate${i}`).value.trim();
+                const feedback = document.getElementById(`translate${i}-feedback`);
+                total++;
+
+                if (userAnswer === readingAnswers[`translate${i}`]) {
+                    score++;
+                    feedback.textContent = "Đúng";
+                    feedback.className = "correct";
+                } else {
+                    feedback.textContent = `Sai (Đáp án: ${readingAnswers[`translate${i}`]})`;
+                    feedback.className = "incorrect";
+                }
+            }
+
+            // Chấm điểm phần đọc hiểu: ghép câu
+            for (let i = 1; i <= 5; i++) {
+                const userAnswer = document.getElementById(`match${i}`).value.trim();
+                const feedback = document.getElementById(`match${i}-feedback`);
+                total++;
+
+                if (userAnswer === readingAnswers[`match${i}`]) {
+                    score++;
+                    feedback.textContent = "Đúng";
+                    feedback.className = "correct";
+                } else {
+                    feedback.textContent = `Sai (Đáp án: ${readingAnswers[`match${i}`]})`;
+                    feedback.className = "incorrect";
+                }
+            }
+
+            // Chấm điểm phần viết
+            for (let i = 1; i <= 3; i++) {
+                const userAnswer = document.getElementById(`sentence${i}`).value.trim();
+                const feedback = document.getElementById(`sentence${i}-feedback`);
+                total++;
+
+                if (userAnswer === writingAnswers[`sentence${i}`]) {
+                    score++;
+                    feedback.textContent = "Đúng";
+                    feedback.className = "correct";
+                } else {
+                    feedback.textContent = `Sai (Đáp án: ${writingAnswers[`sentence${i}`]})`;
+                    feedback.className = "incorrect";
+                }
+            }
+
+            // Hiển thị tổng điểm
+            document.getElementById("score").textContent = `Điểm của bạn: ${score}/${total}`;
+        }
+    </script>
 </head>
 <body>
-    <h1>Đề Ôn Tập HSK1</h1>
+    <h1>Đề Ôn Tập HSK1 (Dựa trên 8 bài đầu trong Giáo trình Hán ngữ)</h1>
 
     <!-- Phần I: Nghe hiểu -->
     <h2>I. Phần Nghe Hiểu (听力 Tīnglì)</h2>
     <div class="question">
-        <label>1. 你好！______</label>
-        <input type="text" placeholder="Nhập đáp án của bạn">
-    </div>
-    <div class="question">
-        <label>2. 你去哪儿？______</label>
-        <input type="text" placeholder="Nhập đáp án của bạn">
-    </div>
-    <div class="question">
-        <label>3. 这是什么？______</label>
-        <input type="text" placeholder="Nhập đáp án của bạn">
-    </div>
-    <div class="question">
-        <label>4. 他是谁？______</label>
-        <input type="text" placeholder="Nhập đáp án của bạn">
-    </div>
-    <div class="question">
-        <label>5. 苹果多少钱一斤？______</label>
-        <input type="text" placeholder="Nhập đáp án của bạn">
+        <p>1. 你好！______</p>
+        <audio controls class="audio-control">
+            <source src="audio/hello.mp3" type="audio/mpeg">
+            Trình duyệt của bạn không hỗ trợ phần audio.
+        </audio>
+        <input type="radio" name="q1" value="a"> a. 你好！<br>
+        <input type="radio" name="q1" value="b"> b. 明天见！<br>
+        <input type="radio" name="q1" value="c"> c. 不客气！<br>
+        <div id="q1-feedback"></div>
     </div>
 
-    <!-- Phần II: Đọc hiểu -->
-    <h2>II. Phần Đọc Hiểu (阅读 Yùdú)</h2>
     <div class="question">
-        <label>1. Điền từ thích hợp vào chỗ trống:</label>
-        <textarea rows="5" placeholder="Nhập câu trả lời"></textarea>
-    </div>
-    <div class="question">
-        <label>2. Dịch câu sau sang tiếng Việt:</label>
-        <textarea rows="5" placeholder="Nhập câu trả lời"></textarea>
-    </div>
-    <div class="question">
-        <label>3. Ghép câu đúng:</label>
-        <textarea rows="5" placeholder="Nhập câu trả lời"></textarea>
+        <p>2. 你去哪儿？______</p>
+        <audio controls class="audio-control">
+            <source src="audio/where.mp3" type="audio/mpeg">
+            Trình duyệt của bạn không hỗ trợ phần audio.
+        </audio>
+        <input type="radio" name="q2" value="a"> a. 我去学校。<br>
+        <input type="radio" name="q2" value="b"> b. 我吃饭。<br>
+        <input type="radio" name="q2" value="c"> c. 我学习汉语。<br>
+        <div id="q2-feedback"></div>
     </div>
 
-    <!-- Phần III: Viết -->
-    <h2>III. Phần Viết (书写 Shūxiě)</h2>
-    <div class="question">
-        <label>1. Viết lại các chữ Hán đã học:</label>
-        <textarea rows="5" placeholder="Nhập câu trả lời"></textarea>
-    </div>
-    <div class="question">
-        <label>2. Sắp xếp lại câu theo thứ tự đúng:</label>
-        <textarea rows="5" placeholder="Nhập câu trả lời"></textarea>
-    </div>
+    <!-- Các câu hỏi khác trong phần nghe hiểu tương tự, thêm audio tương ứng -->
 
-    <!-- Phần IV: Nói -->
-    <h2>IV. Phần Nói (口语 Kǒuyǔ)</h2>
-    <div class="question">
-        <label>1. Trả lời câu hỏi:</label>
-        <textarea rows="5" placeholder="Nhập câu trả lời"></textarea>
-    </div>
-    <div class="question">
-        <label>2. Tự giới thiệu bản thân:</label>
-        <textarea rows="5" placeholder="Nhập câu trả lời"></textarea>
-    </div>
+    <button type="button" onclick="checkAnswers()" style="padding: 10px 20px; font-size: 16px; background-color: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">Kiểm tra đáp án</button>
 
-    <button type="submit" style="padding: 10px 20px; font-size: 16px; background-color: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">Gửi Bài</button>
+    <h3 id="score"></h3>
 </body>
 </html>
