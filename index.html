@@ -6,16 +6,24 @@
     <title>Luyện viết tiếng Trung</title>
     <link rel="stylesheet" href="styles.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
-    <h1>Luyện viết chữ Hán</h1>
-    <p>Dán từ vựng từ Quizlet (dạng Từ vựng - Ngữ pháp):</p>
-    <textarea id="inputText" placeholder="学生 - học sinh&#10;老师 - giáo viên"></textarea>
-    <button onclick="generatePractice()">Tạo bài luyện viết</button>
-    <hr>
-    <div id="outputArea"></div>
+    <button id="rotateScreenBtn" class="rotate-btn" title="Xoay màn hình">
+        <i class="fa-solid fa-rotate"></i>
+    </button>
+    <div id="contentWrapper">
+        <h1>Luyện viết chữ Hán</h1>
+        <p>Dán từ vựng từ Quizlet (dạng Từ vựng - Ngữ pháp):</p>
+        <textarea id="inputText" placeholder="学生 - học sinh&#10;老师 - giáo viên"></textarea>
+        <button onclick="generatePractice()">Tạo bài luyện viết</button>
+        <!-- Thêm vào vị trí phù hợp trong file HTML -->
+        <hr>
+        <div id="outputArea"></div>
+    </div>
 
     <!-- Thư viện Pinyin -->
     <script src="https://cdn.jsdelivr.net/npm/pinyin-util@1.2.3/dist/pinyin-util.min.js"></script>

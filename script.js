@@ -83,7 +83,7 @@ function generatePractice() {
         // Nút phát âm
         const audioBtn = document.createElement('button');
         audioBtn.className = 'audio-btn';
-        audioBtn.innerHTML = '🔊'; // Hoặc sử dụng icon từ thư viện khác
+        audioBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>'; // Hoặc sử dụng icon từ thư viện khác
         audioBtn.onclick = () => responsiveVoice.speak(char, "Chinese Female");
         buttonContainer.appendChild(audioBtn);
 
@@ -183,3 +183,27 @@ function generatePractice() {
         output.appendChild(block);
     });
 }
+
+// --- Bắt đầu mã cho chức năng xoay màn hình ---
+
+// Đợi cho toàn bộ nội dung trang được tải xong rồi mới chạy mã
+document.addEventListener('DOMContentLoaded', () => {
+
+    // Lấy các phần tử HTML cần dùng qua id của chúng
+    const rotateButton = document.getElementById('rotateScreenBtn');
+    const contentWrapper = document.getElementById('contentWrapper');
+
+    // Kiểm tra xem các phần tử có tồn tại không để tránh lỗi
+    if (rotateButton && contentWrapper) {
+
+        // Gắn sự kiện 'click' cho nút xoay
+        rotateButton.addEventListener('click', () => {
+            // Thêm hoặc xóa lớp 'rotated' khỏi contentWrapper.
+            // .toggle() sẽ tự động kiểm tra, nếu có class thì xóa đi, nếu chưa có thì thêm vào.
+            contentWrapper.classList.toggle('rotated');
+        });
+    }
+
+});
+
+// --- Kết thúc mã cho chức năng xoay màn hình ---

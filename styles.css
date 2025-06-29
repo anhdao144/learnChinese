@@ -33,6 +33,10 @@
         flex-direction: column;
     }
 
+    .practice-label {
+        margin-top: 0.5rem;
+    }
+
     .replay-btn {
         margin-top: 5px;
         font-size: 14px;
@@ -154,17 +158,108 @@
 
     /* Nút phát âm */
     .audio-btn {
-        background: none;
-        border: 2px solid #3498db;
-        color: #3498db;
         font-size: 1.2rem;
-        padding: 0.3rem 0.8rem;
+        padding: 10px 10px;
         border-radius: 50%;
         cursor: pointer;
         transition: all 0.3s;
+        background: #444;
+        color: #fff;
     }
 
     .audio-btn:hover {
         background-color: #3498db;
         color: white;
     }
+
+    .rotate-btn {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 1000;
+        background: #444;
+        color: #fff;
+        border: none;
+        padding: 10px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    /* --- Bắt đầu mã cho chức năng xoay màn hình --- */
+
+    /* Thiết lập body để ngăn các thanh cuộn không mong muốn xuất hiện 
+  khi phần nội dung được xoay.
+*/
+    body {
+        overflow-x: hidden;
+    }
+
+    /* Nút xoay màn hình. 
+  Bạn có thể đã có style cho nó, nhưng position: fixed và z-index là quan trọng 
+  để nó luôn hiển thị và nằm trên các nội dung khác.
+*/
+    #rotateScreenBtn {
+        position: fixed;
+        /* Giữ nút cố định trên màn hình */
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        /* Đảm bảo nút luôn nổi lên trên cùng */
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Container chứa nội dung chính của bạn.
+  Chúng ta thêm vào hiệu ứng chuyển động và điểm xoay.
+*/
+    #contentWrapper {
+        /* Hiệu ứng chuyển động mượt mà cho các thuộc tính */
+        transition: transform 0.6s ease-in-out, width 0.6s ease-in-out, height 0.6s ease-in-out, top 0.6s ease-in-out, left 0.6s ease-in-out;
+
+        /* Thiết lập điểm neo để xoay từ tâm */
+        transform-origin: center center;
+
+        /* Thêm thuộc tính này để trình duyệt xử lý transform tốt hơn */
+        will-change: transform;
+
+        /* Các style gốc của bạn cho wrapper vẫn giữ nguyên ở đây */
+        /* ... */
+    }
+
+
+    /* Đây là lớp (class) sẽ được thêm vào #contentWrapper khi xoay.
+  Nó định nghĩa trạng thái "đã xoay ngang".
+*/
+
+    #contentWrapper.rotated {
+        /* Quan trọng: Đặt width và height trước */
+        width: 100vh;
+        /* Hoán đổi width với height của màn hình */
+        height: 100vw;
+        /* Hoán đổi height với width của màn hình */
+        padding: 0 40px;
+        box-sizing: border-box;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+
+        /* ĐÂY LÀ DÒNG QUAN TRỌNG NHẤT:
+      1. translate(-50%, -50%): Dịch chuyển phần tử về tâm. 
+         Nó sẽ di chuyển sang trái 50% chiều rộng MỚI và di chuyển lên trên 50% chiều cao MỚI.
+      2. rotate(90deg): Sau khi đã ở tâm, xoay nó 90 độ.
+      
+      Thứ tự translate() RỒI MỚI rotate() là mấu chốt.
+    */
+        transform: translate(-50%, -50%) rotate(90deg);
+
+        /* Cho phép cuộn nếu nội dung dài hơn màn hình xoay */
+        overflow: auto;
+    }
+
+    /* --- Kết thúc mã cho chức năng xoay màn hình --- */
