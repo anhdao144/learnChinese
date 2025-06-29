@@ -1,0 +1,161 @@
+    body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    textarea {
+        width: 100%;
+        height: 150px;
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    #outputArea {
+        display: flex;
+        flex-direction: column;
+    }
+
+    svg {
+        border: 1px solid #ccc;
+    }
+
+    .practice-boxes {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .replay-btn {
+        margin-top: 5px;
+        font-size: 14px;
+        padding: 3px 8px;
+        flex-grow: 1;
+    }
+
+    .reset-btn {
+        margin-top: 5px;
+        margin-bottom: 20px;
+        font-size: 14px;
+        padding: 3px 8px;
+        flex-grow: 1;
+    }
+
+    /**New change**/
+    .char-block {
+        display: flex;
+        width: 100%;
+        text-align: center;
+        background-color: cornsilk;
+    }
+
+    .svg-wrapper {
+        width: 40%;
+        margin-top: 10px;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    .svg-wrapper svg {
+        display: block;
+        width: 100%;
+        height: auto;
+
+    }
+
+    .practice-boxes {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    /* Desktop: màn hình từ 768px trở lên */
+    @media screen and (min-width: 768px) {
+        p {
+            font-size: 20px;
+        }
+
+        .practice-container {
+            width: calc(50% - 1rem);
+            min-width: 200px;
+        }
+
+        /* Tăng kích thước chữ cho desktop */
+        .practice-label {
+            font-size: 16px;
+            margin-bottom: 0.5rem;
+        }
+
+        button {
+            padding: 0.4rem 0.8rem;
+            font-size: 24px;
+        }
+    }
+
+    /* Mobile: màn hình nhỏ hơn 768px */
+    @media screen and(max-width: 767px) {
+        p {
+            font-size: 24px;
+        }
+
+        .char-block {
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+        }
+
+        .practice-boxes {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .practice-container {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        button {
+            padding: 0.4rem 0.8rem;
+            font-size: 30px;
+        }
+
+        /* Giảm kích thước chữ trên mobile */
+        .practice-label,
+        .char-block {
+            font-size: 14px;
+        }
+    }
+
+    /* Hiển thị Pinyin */
+    .pinyin-display {
+        font-size: 1.2rem;
+        margin: 0.5rem 0;
+        color: #e74c3c;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    /* Container cho các nút */
+    .button-container {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 0.5rem;
+    }
+
+    /* Nút phát âm */
+    .audio-btn {
+        background: none;
+        border: 2px solid #3498db;
+        color: #3498db;
+        font-size: 1.2rem;
+        padding: 0.3rem 0.8rem;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .audio-btn:hover {
+        background-color: #3498db;
+        color: white;
+    }
