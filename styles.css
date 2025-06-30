@@ -243,7 +243,7 @@
         /* Hoán đổi width với height của màn hình */
         height: 100vw;
         /* Hoán đổi height với width của màn hình */
-        padding: 0 40px;
+        padding: 0 10%;
         box-sizing: border-box;
         position: absolute;
         top: 50%;
