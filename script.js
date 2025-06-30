@@ -18,6 +18,7 @@ function createGridSVG(id, size = 100) {
     const ns = "http://www.w3.org/2000/svg";
     const svg = document.createElementNS(ns, "svg");
     svg.setAttribute("id", id);
+    svg.classList.add('practice-grid'); // Thêm class
     svg.setAttribute("viewBox", `0 0 ${size} ${size}`);
     svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
     svg.style.width = "100%";
@@ -32,6 +33,7 @@ function createGridSVG(id, size = 100) {
 
     lines.forEach(({ x1, y1, x2, y2 }) => {
         const line = document.createElementNS(ns, "line");
+        line.setAttribute("class", "grid-line"); // Thêm class
         line.setAttribute("x1", x1);
         line.setAttribute("y1", y1);
         line.setAttribute("x2", x2);
@@ -41,6 +43,7 @@ function createGridSVG(id, size = 100) {
     });
 
     const border = document.createElementNS(ns, "rect");
+    border.setAttribute("class", "grid-border"); // Thêm class
     border.setAttribute("x", 0);
     border.setAttribute("y", 0);
     border.setAttribute("width", size);
@@ -128,6 +131,17 @@ function generatePractice() {
             const practiceContainer = document.createElement('div');
             practiceContainer.className = 'practice-container';
 
+            // Thêm nút điều khiển lưới
+            const gridControls = document.createElement('div');
+            gridControls.className = 'grid-controls';
+
+            const toggleGridBtn = document.createElement('button');
+            toggleGridBtn.className = 'toggle-grid-btn';
+            toggleGridBtn.textContent = 'Ẩn/Hiện ô lưới';
+            gridControls.appendChild(toggleGridBtn);
+
+            practiceContainer.appendChild(gridControls);
+
             const gridId = `practice-${index}-${i}`;
             const grid = createGridSVG(gridId, 100);
             practiceContainer.appendChild(grid);
@@ -174,6 +188,14 @@ function generatePractice() {
                     }
                     setTimeout(initQuiz, 100);
                 };
+
+                // Sự kiện toggle grid
+                toggleGridBtn.addEventListener('click', function () {
+                    grid.classList.toggle('grid-hidden');
+                    this.textContent = grid.classList.contains('grid-hidden')
+                        ? 'Hiện ô lưới'
+                        : 'Ẩn ô lưới';
+                });
             }, 0);
 
             practiceArea.appendChild(practiceContainer);
