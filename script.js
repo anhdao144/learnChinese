@@ -137,7 +137,7 @@ function generatePractice() {
 
             const toggleGridBtn = document.createElement('button');
             toggleGridBtn.className = 'toggle-grid-btn';
-            toggleGridBtn.textContent = 'Ẩn/Hiện ô lưới';
+            toggleGridBtn.textContent = 'Ẩn ô lưới';
             gridControls.appendChild(toggleGridBtn);
 
             practiceContainer.appendChild(gridControls);
@@ -204,28 +204,41 @@ function generatePractice() {
         block.appendChild(practiceArea);
         output.appendChild(block);
     });
+    localStorage.setItem('savedInputText', document.getElementById('inputText').value);
+
 }
 
 // --- Bắt đầu mã cho chức năng xoay màn hình ---
 
 // Đợi cho toàn bộ nội dung trang được tải xong rồi mới chạy mã
 document.addEventListener('DOMContentLoaded', () => {
+    const savedText = localStorage.getItem('savedInputText');
+    if (savedText) {
+        document.getElementById('inputText').value = savedText;
+        generatePractice(); // Tự động sinh luyện viết lại
+    }
 
-    // Lấy các phần tử HTML cần dùng qua id của chúng
+    // (Giữ lại phần xử lý nút xoay màn hình nếu có)
     const rotateButton = document.getElementById('rotateScreenBtn');
     const contentWrapper = document.getElementById('contentWrapper');
-
-    // Kiểm tra xem các phần tử có tồn tại không để tránh lỗi
     if (rotateButton && contentWrapper) {
-
-        // Gắn sự kiện 'click' cho nút xoay
         rotateButton.addEventListener('click', () => {
-            // Thêm hoặc xóa lớp 'rotated' khỏi contentWrapper.
-            // .toggle() sẽ tự động kiểm tra, nếu có class thì xóa đi, nếu chưa có thì thêm vào.
             contentWrapper.classList.toggle('rotated');
         });
     }
 
+    const resetBtn = document.getElementById('resetAllBtn');
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            // Xóa textarea
+            document.getElementById('inputText').value = '';
+            // Xóa localStorage
+            localStorage.removeItem('savedInputText');
+            // Xóa luyện viết đã hiển thị
+            document.getElementById('outputArea').innerHTML = '';
+        });
+    }
 });
+
 
 // --- Kết thúc mã cho chức năng xoay màn hình ---
