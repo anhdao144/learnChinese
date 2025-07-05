@@ -1,0 +1,189 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #f4f7f9;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+.container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+h1,
+h2 {
+    color: #1a73e8;
+    text-align: center;
+}
+
+p {
+    text-align: center;
+    color: #5f6368;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+input[type="password"],
+input[type="text"],
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+input[type="password"]:focus,
+input[type="text"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: #1a73e8;
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background-color: #1a73e8;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #155ab6;
+    transform: translateY(-2px);
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* --- Loading Spinner --- */
+#loading {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border-left-color: #1a73e8;
+    animation: spin 1s ease infinite;
+    margin: 0 auto 10px;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* --- Exercise Form --- */
+#exercise-form {
+    margin-top: 30px;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 20px;
+}
+
+.exercise-item {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.exercise-item p {
+    text-align: left;
+    margin-top: 0;
+    font-weight: 500;
+}
+
+.exercise-item .options label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: normal;
+}
+
+/* --- Result Section --- */
+#result-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid #1a73e8;
+}
+
+#score-container {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #1a73e8;
+}
+
+#score-container span {
+    font-size: 32px;
+    color: #d93025;
+}
+
+.answer-key-item {
+    background: #f1f3f4;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.answer-key-item .question {
+    font-weight: 500;
+}
+
+.answer-key-item .correct-answer {
+    color: #1e8e3e;
+    font-weight: bold;
+}
+
+/* --- Input states --- */
+.correct {
+    border: 2px solid #1e8e3e !important;
+    background-color: #e6f4ea;
+}
+
+.incorrect {
+    border: 2px solid #d93025 !important;
+    background-color: #fce8e6;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Thêm đoạn này vào cuối tệp style.css của bạn */
+
+.input-group input[type="number"] {
+    width: 80px; /* Làm cho ô số nhỏ hơn */
+    text-align: center;
+}
+

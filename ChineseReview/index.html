@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài Tập Tiếng Trung Tương Tác</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Công Cụ Tạo Bài Tập Tiếng Trung Tương Tác</h1>
+        <p>Nhập từ vựng, AI sẽ tạo bài tập, bạn làm trực tiếp và được chấm điểm ngay!</p>
+
+        <div class="input-section">
+            <div class="input-group">
+                <label for="apiKey">API Key Google Gemini của bạn:</label>
+                <input type="password" id="apiKey" placeholder="Dán API Key của bạn vào đây">
+            </div>
+
+            <!-- NEW: Input for number of questions -->
+            <div class="input-group">
+                <label for="questionCount">Số lượng câu hỏi (3-15):</label>
+                <input type="number" id="questionCount" value="5" min="3" max="15">
+            </div>
+
+            <div class="input-group">
+                <label for="vocabInput">Nhập từ vựng (mỗi từ một dòng):</label>
+                <textarea id="vocabInput" rows="10" placeholder="Ví dụ:
+学校 - trường học
+学生 - học sinh
+老师 - giáo viên"></textarea>
+            </div>
+
+            <button id="generateBtn">Tạo Bài Tập</button>
+        </div>
+
+        <div id="loading" class="hidden">
+            <div class="spinner"></div>
+            <p>AI đang soạn bài tập, vui lòng chờ...</p>
+        </div>
+
+        <div id="exercise-form" class="hidden">
+            <h2 id="exercise-title">BÀI TẬP</h2>
+            <div id="exercise-container"></div>
+            <button id="checkBtn">Chấm Bài</button>
+        </div>
+
+        <div id="result-section" class="hidden">
+            <div id="score-container"></div>
+            <div id="answer-key-container">
+                <h2>Đáp Án Chi Tiết</h2>
+                <div id="answer-key"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
