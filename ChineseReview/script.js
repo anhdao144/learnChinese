@@ -51,15 +51,28 @@ async function handleGenerateExercises() {
     setLoading(true, "AI đang soạn bài tập...");
 
     try {
-        const hanziList = vocabText.split('\n').map(line => line.split(' - ')[0].trim()).filter(Boolean);
+        const lines = vocabText.split('\n');
+        const characters = new Set();
+        lines.forEach(line => {
+            const hanzi = line.split('-')[0]?.trim();
+            if (hanzi) {
+                for (let char of hanzi) {
+                    if (/[\u4e00-\u9fff]/.test(char)) {
+                        characters.add(char);
+                    }
+                }
+            }
+        });
+        const hanziList = Array.from(characters);
         if (hanziList.length === 0) throw new Error('Không tìm thấy chữ Hán nào hợp lệ.');
-
+        console.log(hanziList);
         const prompt = createGenerationPrompt(hanziList.join(', '), questionCount);
+        console.log(prompt);
         const responseText = await callGeminiAPI(prompt, apiKey);
 
         const jsonString = responseText.replace(/```json\n?|```/g, '').trim();
         const data = JSON.parse(jsonString);
-
+        console.log(data);
         originalExercises = data.exercises;
         renderExercises(originalExercises);
 
@@ -80,6 +93,8 @@ async function handleCheckAnswers() {
     // NEW: Use the setLoading function for the grading process
     setLoading(true, "AI đang chấm bài và đưa ra nhận xét...");
     checkBtn.disabled = true;
+    document.querySelectorAll('#exercise-container input').forEach(input => input.disabled = true);
+
 
     try {
         const userAnswers = originalExercises.map((_, index) => {
@@ -118,10 +133,10 @@ async function handleCheckAnswers() {
 // --- PROMPT FUNCTIONS (Kept the 2-API-call logic) ---
 
 function createGenerationPrompt(hanziString, count) {
-   return `
+    return `
         Bạn là một API tạo bài tập tiếng Trung. Chỉ trả lời bằng JSON.
         Dựa vào từ vựng: ${hanziString}.
-        Tạo chính xác ${count} câu hỏi.
+        Tạo chính xác ${count} câu hỏi ôn tập tiếng Trung (kết hợp từ vựng và ngữ pháp) dựa trên giáo trình HSK.
         BẠN BẮT BUỘC PHẢI sử dụng một trong các giá trị "type" sau đây cho mỗi câu hỏi:
         - "multiple_choice": Câu hỏi trắc nghiệm, phải có trường "options".
         - "fill_in_the_blank": Điền từ vào chỗ trống. Nếu có trường "options" sẽ hiển thị dạng trắc nghiệm, nếu không sẽ là ô điền tự do.
