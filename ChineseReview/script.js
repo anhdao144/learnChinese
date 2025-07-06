@@ -118,13 +118,31 @@ async function handleCheckAnswers() {
 // --- PROMPT FUNCTIONS (Kept the 2-API-call logic) ---
 
 function createGenerationPrompt(hanziString, count) {
-    return `
-        Bạn là một API tạo bài tập tiếng Trung, chỉ trả lời bằng JSON.
-        Dựa vào từ vựng sau: ${hanziString}.
-        Hãy tạo chính xác ${count} câu hỏi đa dạng.
-        Yêu cầu định dạng JSON không có trường "explanation":
+   return `
+        Bạn là một API tạo bài tập tiếng Trung. Chỉ trả lời bằng JSON.
+        Dựa vào từ vựng: ${hanziString}.
+        Tạo chính xác ${count} câu hỏi.
+        BẠN BẮT BUỘC PHẢI sử dụng một trong các giá trị "type" sau đây cho mỗi câu hỏi:
+        - "multiple_choice": Câu hỏi trắc nghiệm, phải có trường "options".
+        - "fill_in_the_blank": Điền từ vào chỗ trống. Nếu có trường "options" sẽ hiển thị dạng trắc nghiệm, nếu không sẽ là ô điền tự do.
+        - "sentence_correction": Sửa lỗi sai trong câu, người dùng sẽ điền câu đúng.
+        - "translation": Dịch câu, người dùng sẽ điền bản dịch.
+
+        Yêu cầu định dạng JSON như sau, không có trường "explanation":
         {
-          "exercises": [{"type": "...", "question": "...", "options": [...], "answer": "..."}]
+          "exercises": [
+            {
+              "type": "multiple_choice",
+              "question": "Chọn từ thích hợp: 他是我的好___。",
+              "options": ["朋友", "苹果", "再见"],
+              "answer": "朋友"
+            },
+            {
+              "type": "sentence_correction",
+              "question": "Tìm và sửa lỗi sai: 我学习汉语在学校。",
+              "answer": "我在学校学习汉语。"
+            }
+          ]
         }
     `;
 }
