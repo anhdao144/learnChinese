@@ -30,7 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
 // Event Listeners
 generateBtn.addEventListener('click', handleGenerateExercises);
 checkBtn.addEventListener('click', handleCheckAnswers);
-
+document.getElementById('clearVocabBtn').onclick = function () {
+    document.getElementById('vocabInput').value = '';
+};
 // --- STEP 1: GENERATE EXERCISES (FIRST API CALL) ---
 async function handleGenerateExercises() {
     const apiKey = apiKeyInput.value.trim();
