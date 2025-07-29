@@ -253,6 +253,7 @@ function setLoading(isLoading, message = "") {
         let seconds = 0;
         loadingText.textContent = `${message} (0s)`;
         loadingDiv.classList.remove('hidden');
+        loadingDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
         if (loadingTimer) clearInterval(loadingTimer);
 
