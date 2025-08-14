@@ -166,7 +166,7 @@ function createGenerationPrompt(hanziString, count) {
 
 function createGradingPrompt(submissionJson) {
     return `
-        Bạn là một giáo viên tiếng Trung. Một học sinh vừa nộp bài làm:
+        Chỉ trả lời bằng JSON. Bạn là một giáo viên tiếng Trung. Một học sinh vừa nộp bài làm:
         ${submissionJson}
         Nhiệm vụ: Xem xét từng câu, so sánh "userAnswer" với "correctAnswer". Đưa ra nhận xét ngắn gọn, hữu ích bằng tiếng Việt trong trường "explanation". Nếu đúng, hãy khuyến khích. Nếu sai, giải thích lỗi sai.
         Trả về kết quả dưới dạng JSON DUY NHẤT:
@@ -302,3 +302,4 @@ function resetUI() {
     checkBtn.disabled = false;
     originalExercises = [];
 }
+
