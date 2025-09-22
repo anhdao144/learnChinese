@@ -94,7 +94,6 @@ async function handleCheckAnswers() {
     const apiKey = apiKeyInput.value.trim();
     // NEW: Use the setLoading function for the grading process
     setLoading(true, "AI đang chấm bài và đưa ra nhận xét...");
-    checkBtn.disabled = true;
     document.querySelectorAll('#exercise-container input').forEach(input => input.disabled = true);
 
 
@@ -302,4 +301,5 @@ function resetUI() {
     checkBtn.disabled = false;
     originalExercises = [];
 }
+
 
