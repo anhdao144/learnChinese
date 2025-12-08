@@ -30,9 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Event Listeners
 generateBtn.addEventListener('click', handleGenerateExercises);
 checkBtn.addEventListener('click', handleCheckAnswers);
-document.getElementById('clearVocabBtn').onclick = function () {
-    document.getElementById('vocabInput').value = '';
-};
+
 // --- STEP 1: GENERATE EXERCISES (FIRST API CALL) ---
 async function handleGenerateExercises() {
     const apiKey = apiKeyInput.value.trim();
@@ -70,9 +68,9 @@ async function handleGenerateExercises() {
         console.log(hanziList);
         const prompt = createGenerationPrompt(hanziList.join(', '), questionCount);
         console.log(prompt);
-        const responseText = await callGeminiAPI(prompt, apiKey);
+        const responseData = await callGeminiAPI(prompt, apiKey);
 
-        const jsonString = responseText.replace(/```json\n?|```/g, '').trim();
+        const jsonString = responseData.replace(/```json\n?|```/g, '').trim();
         const data = JSON.parse(jsonString);
         console.log(data);
         originalExercises = data.exercises;
@@ -165,10 +163,10 @@ function createGenerationPrompt(hanziString, count) {
 
 function createGradingPrompt(submissionJson) {
     return `
-        Chỉ trả lời bằng JSON. Bạn là một giáo viên tiếng Trung. Một học sinh vừa nộp bài làm:
+        Bạn là một giáo viên tiếng Trung. Một học sinh vừa nộp bài làm:
         ${submissionJson}
         Nhiệm vụ: Xem xét từng câu, so sánh "userAnswer" với "correctAnswer". Đưa ra nhận xét ngắn gọn, hữu ích bằng tiếng Việt trong trường "explanation". Nếu đúng, hãy khuyến khích. Nếu sai, giải thích lỗi sai.
-        Trả về kết quả dưới dạng JSON DUY NHẤT:
+        Chỉ trả về kết quả dưới dạng JSON với định dạng như sau:
         {
           "results": [{"isCorrect": true/false, "explanation": "..."}]
         }
@@ -179,10 +177,10 @@ function createGradingPrompt(submissionJson) {
 
 async function callGeminiAPI(prompt, apiKey) {
     // This function remains the same
-    const apiUrl = `https://openrouter.ai/api/v1/chat/completions`;
+    const apiUrl = 'https://openrouter.ai/api/v1/chat/completions';
     const response = await fetch(apiUrl, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Authorization": `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
             "model": "google/gemini-2.0-flash-001",
             "messages": [
@@ -280,7 +278,7 @@ function displayResults(score, total) {
     scoreContainer.innerHTML = `Kết quả của bạn: <span>${score} / ${total}</span> câu đúng`;
     renderAnswerKey(originalExercises);
     resultSection.classList.remove('hidden');
-    window.scrollTo({ top: resultSection.offsetTop, behavior: 'smooth' });
+    window.scrollTo({ top: exerciseForm.offsetTop, behavior: 'smooth' });
 }
 
 function renderAnswerKey(exercises) {
@@ -307,6 +305,3 @@ function resetUI() {
     checkBtn.disabled = false;
     originalExercises = [];
 }
-
-
-
