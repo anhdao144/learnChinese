@@ -81,6 +81,25 @@ button:disabled {
     transform: none;
 }
 
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.button-group button {
+    flex: 1;
+    margin: 0;
+}
+
+.btn-secondary {
+    background-color: #ea4335 !important;
+}
+
+.btn-secondary:hover {
+    background-color: #c5221f !important;
+}
+
 /* --- Loading Spinner --- */
 #loading {
     margin-top: 20px;
@@ -186,4 +205,3 @@ button:disabled {
     width: 80px; /* Làm cho ô số nhỏ hơn */
     text-align: center;
 }
-
