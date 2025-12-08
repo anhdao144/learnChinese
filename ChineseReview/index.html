@@ -14,10 +14,10 @@
     <div class="container">
         <h1>Công Cụ Tạo Bài Tập Tiếng Trung Tương Tác</h1>
         <p>Nhập từ vựng, AI sẽ tạo bài tập, bạn làm trực tiếp và được chấm điểm ngay!</p>
-        <a href="../">Luyện viết</a>
+        <a href="../index.html">Luyện viết</a>
         <div class="input-section">
             <div class="input-group">
-                <label for="apiKey">API key của bạn:</label>
+                <label for="apiKey">Openrouter.ai API Key của bạn:</label>
                 <input type="password" id="apiKey" placeholder="Dán API Key của bạn vào đây">
             </div>
 
@@ -33,23 +33,19 @@
 学校 - trường học
 学生 - học sinh
 老师 - giáo viên"></textarea>
-                <button type="button" id="clearVocabBtn">Xóa</button>
             </div>
 
             <button id="generateBtn">Tạo Bài Tập</button>
         </div>
-        
-       <div id="exercise-form" class="hidden">
+        <div id="exercise-form" class="hidden">
             <h2 id="exercise-title">BÀI TẬP</h2>
             <div id="exercise-container"></div>
             <button id="checkBtn">Chấm Bài</button>
         </div>
-
         <div id="loading" class="hidden">
             <div class="spinner"></div>
             <p>AI đang soạn bài tập, vui lòng chờ...</p>
         </div>
-
         <div id="result-section" class="hidden">
             <div id="score-container"></div>
             <div id="answer-key-container">
@@ -63,4 +59,3 @@
 </body>
 
 </html>
-
