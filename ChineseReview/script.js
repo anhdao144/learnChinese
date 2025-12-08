@@ -179,24 +179,30 @@ function createGradingPrompt(submissionJson) {
 
 async function callGeminiAPI(prompt, apiKey) {
     // This function remains the same
-    const apiUrl = `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-pro:generateContent?key=${apiKey}`;
+    const apiUrl = `https://openrouter.ai/api/v1/chat/completions`;
     const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: { temperature: 0.5 }
+            "model": "google/gemini-2.0-flash-001",
+            "messages": [
+                {
+                    "role": "user",
+                    "content": prompt,
+                }
+            ],
         }),
     });
     if (!response.ok) {
         const errorData = await response.json();
         throw new Error(`Lỗi API: ${errorData.error.message}`);
     }
-    const data = await response.json();
-    if (!data.candidates?.[0]?.content?.parts?.[0]?.text) {
+    const responseData = await response.json();
+    const content = responseData.choices[0].message.content;
+    if (!content) {
         throw new Error("Phản hồi từ AI không có nội dung hợp lệ.");
     }
-    return data.candidates[0].content.parts[0].text;
+    return content;
 }
 
 function renderExercises(exercises) {
@@ -301,5 +307,6 @@ function resetUI() {
     checkBtn.disabled = false;
     originalExercises = [];
 }
+
 
 
