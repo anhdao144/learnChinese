@@ -1,5 +1,6 @@
 // DOM Elements
 const generateBtn = document.getElementById('generateBtn');
+const clearBtn =document.getElementById('clearBtn');
 const apiKeyInput = document.getElementById('apiKey');
 const vocabInput = document.getElementById('vocabInput');
 const questionCountInput = document.getElementById('questionCount');
@@ -30,6 +31,11 @@ document.addEventListener('DOMContentLoaded', () => {
 // Event Listeners
 generateBtn.addEventListener('click', handleGenerateExercises);
 checkBtn.addEventListener('click', handleCheckAnswers);
+clearBtn.addEventListener('click',handleClearButton);
+
+function handleClearButton() {
+    vocabInput.value = '';
+}
 
 // --- STEP 1: GENERATE EXERCISES (FIRST API CALL) ---
 async function handleGenerateExercises() {
@@ -305,6 +311,3 @@ function resetUI() {
     checkBtn.disabled = false;
     originalExercises = [];
 }
-
-
-
