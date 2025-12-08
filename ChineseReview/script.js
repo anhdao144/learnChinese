@@ -180,7 +180,7 @@ async function callGeminiAPI(prompt, apiKey) {
     const apiUrl = 'https://openrouter.ai/api/v1/chat/completions';
     const response = await fetch(apiUrl, {
         method: 'POST',
-        headers: { "Authorization": `Bearer ${apiKey}`,"HTTP-Referer": "https://anhdao144.github.io/learnChinese/ChineseReview/", 'Content-Type': 'application/json' },
+        headers: { "Authorization": `Bearer ${apiKey}`,"HTTP-Referer": "https://anhdao144.github.io/", 'Content-Type': 'application/json' },
         body: JSON.stringify({
             "model": "google/gemini-2.0-flash-001",
             "messages": [
@@ -305,4 +305,5 @@ function resetUI() {
     checkBtn.disabled = false;
     originalExercises = [];
 }
+
 
