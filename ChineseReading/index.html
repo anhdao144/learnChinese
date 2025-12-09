@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo Bài Luyện Đọc Tiếng Trung HSK</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-book-open"></i> Tạo Bài Luyện Đọc Tiếng Trung HSK</h1>
+            <p class="subtitle">Nhập từ vựng HSK của bạn, chọn cấp độ và tạo bài luyện đọc được cá nhân hóa sử dụng
+                Openrouter API. Bài đọc sẽ được tạo với từ vựng bạn đã nhập và định dạng JSON.</p>
+        </header>
+
+        <div class="main-content">
+            <section class="input-section">
+                <h2 class="section-title"><i class="fas fa-edit"></i> Nhập Từ Vựng HSK</h2>
+
+                <div class="vocab-input">
+                    <textarea id="vocabText" placeholder="Nhập từ vựng tiếng Trung HSK của bạn ở đây (mỗi từ một dòng hoặc phân tách bằng dấu phẩy). Ví dụ:
+你好 (nǐ hǎo) - xin chào
+谢谢 (xiè xiè) - cảm ơn
+早上好 (zǎo shang hǎo) - chào buổi sáng"></textarea>
+                </div>
+
+                <h3 class="section-title"><i class="fas fa-chart-bar"></i> Chọn Cấp Độ HSK</h3>
+                <div class="hsk-levels">
+                    <div class="hsk-level selected" data-level="1">HSK 1</div>
+                    <div class="hsk-level" data-level="2">HSK 2</div>
+                    <div class="hsk-level" data-level="3">HSK 3</div>
+                    <div class="hsk-level" data-level="4">HSK 4</div>
+                    <div class="hsk-level" data-level="5">HSK 5</div>
+                    <div class="hsk-level" data-level="6">HSK 6</div>
+                </div>
+
+                <div class="error-message" id="errorMessage"></div>
+                <div class="success-message" id="successMessage"></div>
+
+                <div class="controls">
+                    <div class="api-key-input">
+                        <input type="password" id="apiKey"
+                            placeholder="Nhập API Key của Openrouter (hoặc sử dụng demo)">
+                    </div>
+                    <button id="generateBtn">
+                        <i class="fas fa-magic"></i> Tạo Bài Luyện Đọc
+                    </button>
+                </div>
+
+                <div class="loading" id="loadingIndicator">
+                    <div class="spinner"></div>
+                    <p>Đang tạo bài luyện đọc với Google AI Studio...</p>
+                </div>
+            </section>
+
+            <section class="output-section">
+                <h2 class="section-title"><i class="fas fa-file-alt"></i> Bài Luyện Đọc</h2>
+                <div class="output-area" id="outputArea">
+                    <p class="reading-content">Bài luyện đọc sẽ xuất hiện ở đây. Nhập từ vựng và nhấn "Tạo Bài Luyện
+                        Đọc" để bắt đầu.</p>
+
+                    <div class="vocab-list">
+                        <h3><i class="fas fa-list-ul"></i> Từ Vựng Đã Sử Dụng</h3>
+                        <div id="vocabDisplay"></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <section class="instructions">
+            <h2><i class="fas fa-info-circle"></i> Hướng Dẫn Sử Dụng</h2>
+            <p>Trang web này sử dụng Openrouter API để tạo bài luyện đọc tiếng Trung dựa trên từ vựng HSK mà bạn
+                cung cấp.</p>
+
+            <div class="steps">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Nhập từ vựng</strong>
+                    <p>Nhập từ vựng tiếng Trung bạn muốn luyện tập. Bạn có thể nhập kèm pinyin và nghĩa tiếng Việt.</p>
+                </div>
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong>Chọn cấp độ HSK</strong>
+                    <p>Chọn cấp độ HSK phù hợp để bài đọc được điều chỉnh độ khó tương ứng.</p>
+                </div>
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <strong>Nhập API Key (tùy chọn)</strong>
+                    <p>Nhập API Key từ Openrouter hoặc sử dụng chế độ demo để thử nghiệm.</p>
+                </div>
+                <div class="step">
+                    <span class="step-number">4</span>
+                    <strong>Tạo bài luyện đọc</strong>
+                    <p>Nhấn nút "Tạo Bài Luyện Đọc" và chờ hệ thống tạo nội dung phù hợp với từ vựng của bạn.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Trang web tạo bài luyện đọc tiếng Trung HSK &copy; 2025 | Sử dụng Openrouter API</p>
+            <p>Lưu ý: Đây là công cụ học tập hỗ trợ và có thể cần kiểm tra lại nội dung với giáo viên hoặc tài liệu
+                chính thống.</p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+
+</html>
