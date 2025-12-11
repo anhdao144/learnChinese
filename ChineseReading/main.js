@@ -1,6 +1,5 @@
 // Các biến toàn cục
 let selectedHskLevel = 1;
-let useDemoMode = true;
 
 // Lắng nghe sự kiện khi trang được tải
 document.addEventListener('DOMContentLoaded', function () {
@@ -17,16 +16,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Cập nhật cấp độ HSK được chọn
             selectedHskLevel = parseInt(this.getAttribute('data-level'));
+            
+            // Lưu cấp độ HSK được chọn vào localStorage
+            localStorage.setItem('selectedHskLevel', selectedHskLevel);
         });
     });
 
     // Thiết lập sự kiện cho nút tạo bài đọc
     document.getElementById('generateBtn').addEventListener('click', generateReadingExercise);
-
-    // Tải từ vựng đã lưu từ localStorage
-    const vocabInput = document.getElementById('vocabText');
-    const savedVocab = localStorage.getItem('readingVocabList');
-    if (savedVocab) vocabInput.value = savedVocab;
 
     // Tải API key từ localStorage
     const savedApiKey = localStorage.getItem('chineseReadingApiKey');
@@ -34,31 +31,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (savedApiKey) {
         apiKeyInput.value = savedApiKey;
-        useDemoMode = false;
     }
 
-    // Thiết lập sự kiện cho input vocab
-    vocabInput.addEventListener('input', function () {
-        // Lưu từ vựng vào localStorage
-        localStorage.setItem('readingVocabList', this.value.trim());
-    });
+    // Tải từ vựng từ localStorage
+    const savedVocab = localStorage.getItem('chineseReadingVocab');
+    const vocabText = document.getElementById('vocabText');
 
-    // Thiết lập sự kiện cho input API key
-    apiKeyInput.addEventListener('input', function () {
-        useDemoMode = !this.value.trim() || this.value.trim() === 'demo';
-
-        if (useDemoMode) {
-            apiKeyInput.placeholder = "Đang sử dụng chế độ demo";
-            localStorage.removeItem('chineseReadingApiKey');
-        } else {
-            apiKeyInput.placeholder = "Nhập API Key";
-            // Lưu API key vào localStorage
-            localStorage.setItem('chineseReadingApiKey', this.value.trim());
-        }
-    });
-
-    // Đặt ví dụ từ vựng mẫu
-    document.getElementById('vocabText').value = `你好 (nǐ hǎo) - xin chào
+    if (savedVocab) {
+        vocabText.value = savedVocab;
+    } else {
+        // Nếu không có từ vựng đã lưu, hiển thị ví dụ mẫu
+        vocabText.value = `你好 (nǐ hǎo) - xin chào
 谢谢 (xiè xiè) - cảm ơn
 早上好 (zǎo shang hǎo) - chào buổi sáng
 朋友 (péng you) - bạn bè
@@ -68,6 +51,37 @@ document.addEventListener('DOMContentLoaded', function () {
 今天 (jīn tiān) - hôm nay
 明天 (míng tiān) - ngày mai
 喜欢 (xǐ huān) - thích`;
+    }
+
+    // Tải cấp độ HSK được chọn từ localStorage
+    const savedHskLevel = localStorage.getItem('selectedHskLevel');
+    if (savedHskLevel) {
+        selectedHskLevel = parseInt(savedHskLevel);
+        const selectedLevelBtn = document.querySelector(`.hsk-level[data-level="${selectedHskLevel}"]`);
+        if (selectedLevelBtn) {
+            selectedLevelBtn.classList.add('selected');
+        }
+    }
+
+    // Thiết lập sự kiện cho input API key
+    apiKeyInput.addEventListener('input', function () {
+        if (!this.value.trim()) {
+            apiKeyInput.placeholder = "Nhập API Key";
+            localStorage.removeItem('chineseReadingApiKey');
+        } else {
+            apiKeyInput.placeholder = "Nhập API Key";
+            localStorage.setItem('chineseReadingApiKey', this.value.trim());
+        }
+    });
+
+    // Thiết lập sự kiện cho textarea từ vựng để lưu tự động
+    vocabText.addEventListener('input', function () {
+        if (this.value.trim()) {
+            localStorage.setItem('chineseReadingVocab', this.value);
+        } else {
+            localStorage.removeItem('chineseReadingVocab');
+        }
+    });
 });
 
 // Hàm tạo bài luyện đọc
@@ -91,40 +105,25 @@ async function generateReadingExercise() {
     const vocabList = parseVocabulary(vocabText);
 
     try {
-        let response;
-
-        // Sử dụng chế độ demo nếu không có API key hoặc nhập "demo"
-        if (!apiKey || apiKey === 'demo') {
-            useDemoMode = true;
-            response = await simulateApiResponse(vocabList, selectedHskLevel);
-        } else {
-            useDemoMode = false;
-            // Tạo prompt cho API
-            const prompt = createPrompt(vocabList, selectedHskLevel);
-            // Gọi API thực tế của Google AI Studio (Gemini)
-            response = await callGoogleAIStudioAPI(prompt, apiKey);
+        // Kiểm tra API key
+        if (!apiKey) {
+            showError('Vui lòng nhập API key để sử dụng dịch vụ này.');
+            return;
         }
+
+        // Tạo prompt cho API
+        const prompt = createPrompt(vocabList, selectedHskLevel);
+        // Gọi API thực tế của Google AI Studio (Gemini)
+        const response = await callGoogleAIStudioAPI(prompt, apiKey);
 
         // Hiển thị kết quả
         displayResult(response);
 
         // Hiển thị thông báo thành công
-        showSuccess('Bài luyện đọc đã được tạo thành công!' + (useDemoMode ? ' (Đang dùng chế độ DEMO)' : ''));
+        showSuccess('Bài luyện đọc đã được tạo thành công!');
     } catch (error) {
         console.error('Lỗi khi gọi API:', error);
         showError('Có lỗi xảy ra khi tạo bài luyện đọc: ' + error.message);
-
-        // Thử dùng chế độ demo nếu API thất bại
-        if (!useDemoMode) {
-            showError('API thất bại, đang chuyển sang chế độ demo...');
-            try {
-                const demoResponse = await simulateApiResponse(vocabList, selectedHskLevel);
-                displayResult(demoResponse);
-                showSuccess('Đã sử dụng chế độ demo để tạo bài luyện đọc.');
-            } catch (demoError) {
-                showError('Cả chế độ demo cũng thất bại: ' + demoError.message);
-            }
-        }
     } finally {
         // Ẩn trạng thái loading
         document.getElementById('loadingIndicator').style.display = 'none';
@@ -293,82 +292,6 @@ async function callGoogleAIStudioAPI(prompt, apiKey) {
     }
 }
 
-// Hàm tạo phản hồi dự phòng khi API không trả về JSON hợp lệ
-function createFallbackResponse(text, vocabList, hskLevel) {
-    // Cố gắng trích xuất thông tin từ văn bản
-    const lines = text.split('\n').filter(line => line.trim());
-
-    let title = `Bài Luyện Đọc HSK ${hskLevel}`;
-    let content = text;
-    let vocabulary = vocabList;
-
-    // Cố gắng tìm tiêu đề
-    if (lines.length > 0 && lines[0].length < 50) {
-        title = lines[0];
-        content = lines.slice(1).join('\n');
-    }
-
-    return {
-        title: title,
-        content: content.substring(0, 500), // Giới hạn độ dài
-        vocabulary: vocabulary,
-        hsk_level: hskLevel,
-        word_count: content.length,
-        questions: [
-            {
-                question: "Bài đọc này chủ yếu nói về điều gì?",
-                options: ["Cuộc sống hàng ngày", "Văn hóa Trung Quốc", "Học tiếng Trung", "Thời tiết"],
-                correct_answer: 0
-            }
-        ]
-    };
-}
-
-// Hàm mô phỏng phản hồi API (cho chế độ demo)
-async function simulateApiResponse(vocabList, hskLevel) {
-    // Tạo độ trễ giả lập mạng
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    // Tạo nội dung bài đọc mẫu dựa trên từ vựng
-    const vocabForReading = vocabList.slice(0, Math.min(vocabList.length, 8));
-
-    // Tạo bài đọc mẫu
-    const sampleContent = `今天天气很好。${vocabList.find(v => v.chinese.includes('朋友'))?.chinese || '小明'}和他的${vocabList.find(v => v.chinese.includes('朋友'))?.chinese || '朋友'}一起去公园。他们说："${vocabList.find(v => v.chinese.includes('你好'))?.chinese || '你好'}！"和"${vocabList.find(v => v.chinese.includes('谢谢'))?.chinese || '谢谢'}！"。他们喜欢${vocabList.find(v => v.chinese.includes('学习'))?.chinese || '学习'}${vocabList.find(v => v.chinese.includes('中文'))?.chinese || '中文'}。每天早上他们说："${vocabList.find(v => v.chinese.includes('早上好'))?.chinese || '早上好'}！"。学习中文很有意思，也很有用。`;
-
-    // Tạo câu hỏi mẫu
-    const sampleQuestions = [
-        {
-            question: "他们在哪里见面？",
-            options: ["在学校", "在公园", "在家", "在餐厅"],
-            correct_answer: 1
-        },
-        {
-            question: "他们学习什么？",
-            options: ["英语", "中文", "数学", "历史"],
-            correct_answer: 1
-        },
-        {
-            question: "他们什么时候说“早上好”？",
-            options: ["晚上", "下午", "早上", "中午"],
-            correct_answer: 2
-        }
-    ];
-
-    // Trả về đối tượng JSON như API thực tế
-    return {
-        title: `Bài Luyện Đọc HSK ${hskLevel}`,
-        content: sampleContent,
-        vocabulary: vocabList.map(v => ({
-            chinese: v.chinese,
-            pinyin: v.pinyin || getPinyinFromChinese(v.chinese),
-            meaning: v.meaning || getMeaningFromChinese(v.chinese)
-        })),
-        hsk_level: hskLevel,
-        word_count: sampleContent.length,
-        questions: sampleQuestions
-    };
-}
-
 // Hàm hỗ trợ: Lấy pinyin từ chữ Hán (đơn giản)
 function getPinyinFromChinese(chinese) {
     const pinyinMap = {
@@ -474,10 +397,6 @@ function displayResult(data) {
         ` : ''}
         
         ${questionsHTML}
-        
-        <div class="api-info">
-            <p><i class="fas fa-info-circle"></i> ${useDemoMode ? 'Đang sử dụng chế độ DEMO' : 'Đã sử dụng API'}</p>
-        </div>
     `;
 
     outputArea.innerHTML = contentHTML;
@@ -578,4 +497,3 @@ function hideMessages() {
     document.getElementById('errorMessage').style.display = 'none';
     document.getElementById('successMessage').style.display = 'none';
 }
-
