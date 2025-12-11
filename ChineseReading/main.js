@@ -23,19 +23,30 @@ document.addEventListener('DOMContentLoaded', function () {
     // Thiết lập sự kiện cho nút tạo bài đọc
     document.getElementById('generateBtn').addEventListener('click', generateReadingExercise);
 
+    // Tải từ vựng đã lưu từ localStorage
+    const vocabInput = document.getElementById('vocabText');
+    const savedVocab = localStorage.getItem('chineseVocabList');
+    if (savedVocab) vocabInput.value = savedVocab;
+
     // Tải API key từ localStorage
     const savedApiKey = localStorage.getItem('chineseReadingApiKey');
     const apiKeyInput = document.getElementById('apiKey');
-    
+
     if (savedApiKey) {
         apiKeyInput.value = savedApiKey;
         useDemoMode = false;
     }
 
+    // Thiết lập sự kiện cho input vocab
+    vocabInput.addEventListener('input', function () {
+        // Lưu từ vựng vào localStorage
+        localStorage.setItem('chineseVocabList', this.value.trim());
+    });
+
     // Thiết lập sự kiện cho input API key
     apiKeyInput.addEventListener('input', function () {
         useDemoMode = !this.value.trim() || this.value.trim() === 'demo';
-        
+
         if (useDemoMode) {
             apiKeyInput.placeholder = "Đang sử dụng chế độ demo";
             localStorage.removeItem('chineseReadingApiKey');
@@ -222,9 +233,9 @@ async function callGoogleAIStudioAPI(prompt, apiKey) {
     const apiUrl = 'https://openrouter.ai/api/v1/chat/completions';
     const response = await fetch(apiUrl, {
         method: 'POST',
-        headers: { 
-            "Authorization": `Bearer ${apiKey}`, 
-            'Content-Type': 'application/json' 
+        headers: {
+            "Authorization": `Bearer ${apiKey}`,
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify({
             "model": "google/gemini-2.0-flash-001",
