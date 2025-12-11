@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Tải từ vựng đã lưu từ localStorage
     const vocabInput = document.getElementById('vocabText');
-    const savedVocab = localStorage.getItem('chineseVocabList');
+    const savedVocab = localStorage.getItem('readingVocabList');
     if (savedVocab) vocabInput.value = savedVocab;
 
     // Tải API key từ localStorage
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Thiết lập sự kiện cho input vocab
     vocabInput.addEventListener('input', function () {
         // Lưu từ vựng vào localStorage
-        localStorage.setItem('chineseVocabList', this.value.trim());
+        localStorage.setItem('readingVocabList', this.value.trim());
     });
 
     // Thiết lập sự kiện cho input API key
@@ -578,3 +578,4 @@ function hideMessages() {
     document.getElementById('errorMessage').style.display = 'none';
     document.getElementById('successMessage').style.display = 'none';
 }
+
