@@ -188,7 +188,7 @@ async function callGeminiAPI(prompt, apiKey) {
         method: 'POST',
         headers: { "Authorization": `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            "model": "google/gemini-2.5-flash-lite-preview-09-2025",
+            "model": "google/gemini-2.0-flash-001",
             "messages": [
                 {
                     "role": "user",
@@ -311,4 +311,5 @@ function resetUI() {
     checkBtn.disabled = false;
     originalExercises = [];
 }
+
 
