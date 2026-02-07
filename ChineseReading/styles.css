@@ -363,6 +363,34 @@
             opacity: 0.7;
         }
 
+        .voice-selector {
+            padding: 10px 12px;
+            background-color: white;
+            border: 2px solid #1976d2;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #333;
+            min-width: 200px;
+        }
+
+        .voice-selector:hover {
+            box-shadow: 0 4px 12px rgba(25, 118, 210, 0.2);
+            border-color: #1565c0;
+        }
+
+        .voice-selector:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+        }
+
+        .voice-selector option {
+            padding: 10px;
+            background-color: white;
+            color: #333;
+        }
+
         .reading-hint {
             color: #1976d2;
             font-size: 0.95rem;
@@ -414,5 +442,24 @@
 
             .api-key-input {
                 min-width: 100%;
+            }
+
+            .reading-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .voice-selector {
+                min-width: 100%;
+            }
+
+            .read-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .reading-hint {
+                text-align: center;
+                width: 100%;
             }
         }
