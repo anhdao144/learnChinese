@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Cập nhật cấp độ HSK được chọn
             selectedHskLevel = parseInt(this.getAttribute('data-level'));
-            
+
             // Lưu cấp độ HSK được chọn vào localStorage
             localStorage.setItem('selectedHskLevel', selectedHskLevel);
         });
@@ -82,6 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
             localStorage.removeItem('chineseReadingVocab');
         }
     });
+
 });
 
 // Hàm tạo bài luyện đọc
@@ -380,6 +381,15 @@ function displayResult(data) {
 
     // Tạo toàn bộ nội dung
     const contentHTML = `
+        <div class="reading-controls">
+            <button id="readAllBtn" class="read-btn" title="Đọc toàn bộ nội dung">
+                <i class="fas fa-volume-up"></i> Đọc
+            </button>
+            <button id="stopReadBtn" class="read-btn stop-btn" title="Dừng đọc" style="display: none;">
+                <i class="fas fa-stop-circle"></i> Dừng
+            </button>
+            <span class="reading-hint">💡 Bôi đen để đọc từng đoạn</span>
+        </div>
         <h3 style="color: #1976d2; margin-bottom: 15px;">${data.title || 'Bài Luyện Đọc'}</h3>
         <div class="reading-content">${data.content || 'Không có nội dung'}</div>
         
@@ -466,6 +476,9 @@ function displayResult(data) {
             });
         });
     }
+
+    // Khởi tạo chức năng đọc văn bản sau khi nội dung được hiển thị
+    initializeTextToSpeechFeatures();
 }
 
 // Hàm hiển thị thông báo lỗi
@@ -497,3 +510,125 @@ function hideMessages() {
     document.getElementById('errorMessage').style.display = 'none';
     document.getElementById('successMessage').style.display = 'none';
 }
+
+// ==================== CHỨC NĂNG ĐỌC VĂN BẢN TIẾNG TRUNG ====================
+
+// Biến toàn cục để lưu trạng thái đọc
+let currentUtterance = null;
+let isReading = false;
+
+// Hàm khởi tạo chức năng đọc văn bản
+function initializeTextToSpeechFeatures() {
+    const readAllBtn = document.getElementById('readAllBtn');
+    const stopReadBtn = document.getElementById('stopReadBtn');
+
+    // Sự kiện nút Đọc
+    if (readAllBtn) {
+        readAllBtn.addEventListener('click', function () {
+            const contentElement = document.querySelector('.reading-content');
+            if (contentElement) {
+                const text = contentElement.innerText;
+                speakText(text);
+            }
+        });
+    }
+
+    // Sự kiện nút Dừng
+    if (stopReadBtn) {
+        stopReadBtn.addEventListener('click', function () {
+            stopSpeaking();
+        });
+    }
+
+    // Sự kiện bôi đen để đọc
+    document.addEventListener('mouseup', function () {
+        const selectedText = window.getSelection().toString().trim();
+        if (selectedText && selectedText.length > 0) {
+            // Đọc nếu người dùng bôi đen bất kỳ text nào
+            speakText(selectedText);
+        }
+    });
+}
+
+// Hàm phát âm văn bản
+function speakText(text) {
+    // Dừng đọc hiện tại nếu đang đọc
+    if (isReading) {
+        stopSpeaking();
+    }
+
+    // Kiểm tra trình duyệt có hỗ trợ Web Speech API không
+    const SpeechSynthesisUtterance = window.SpeechSynthesisUtterance || window.webkitSpeechSynthesisUtterance;
+    const speechSynthesis = window.speechSynthesis;
+
+    if (!SpeechSynthesisUtterance || !speechSynthesis) {
+        showError('Trình duyệt của bạn không hỗ trợ chức năng đọc văn bản.');
+        return;
+    }
+
+    // Tạo utterance mới
+    currentUtterance = new SpeechSynthesisUtterance(text);
+
+    // Thiết lập các tùy chọn đọc
+    currentUtterance.lang = 'zh-CN'; // Tiếng Trung Quốc
+    currentUtterance.rate = 0.9; // Tốc độ đọc (0.1 - 10)
+    currentUtterance.pitch = 1; // Cao độ giọng (0.1 - 2)
+    currentUtterance.volume = 1; // Âm lượng (0 - 1)
+
+    // Sự kiện khi bắt đầu đọc
+    currentUtterance.onstart = function () {
+        isReading = true;
+        updateReadButtonState();
+    };
+
+    // Sự kiện khi kết thúc đọc
+    currentUtterance.onend = function () {
+        isReading = false;
+        updateReadButtonState();
+    };
+
+    // Sự kiện khi có lỗi
+    currentUtterance.onerror = function (event) {
+        console.error('Lỗi đọc văn bản:', event);
+        showError('Có lỗi xảy ra khi đọc văn bản: ' + event.error);
+        isReading = false;
+        updateReadButtonState();
+    };
+
+    // Phát âm
+    speechSynthesis.speak(currentUtterance);
+}
+
+// Hàm dừng đọc
+function stopSpeaking() {
+    const speechSynthesis = window.speechSynthesis;
+    if (speechSynthesis) {
+        speechSynthesis.cancel();
+    }
+    isReading = false;
+    updateReadButtonState();
+}
+
+// Hàm cập nhật trạng thái nút
+function updateReadButtonState() {
+    const readAllBtn = document.getElementById('readAllBtn');
+    const stopReadBtn = document.getElementById('stopReadBtn');
+
+    if (isReading) {
+        if (readAllBtn) {
+            readAllBtn.style.display = 'none';
+        }
+        if (stopReadBtn) {
+            stopReadBtn.style.display = 'flex';
+        }
+    } else {
+        if (readAllBtn) {
+            readAllBtn.style.display = 'flex';
+        }
+        if (stopReadBtn) {
+            stopReadBtn.style.display = 'none';
+        }
+    }
+}
+
+
