@@ -1,5 +1,7 @@
 // Các biến toàn cục
 let selectedHskLevel = 1;
+let selectedVoice = null;
+let availableVoices = [];
 
 // Lắng nghe sự kiện khi trang được tải
 document.addEventListener('DOMContentLoaded', function () {
@@ -388,6 +390,9 @@ function displayResult(data) {
             <button id="stopReadBtn" class="read-btn stop-btn" title="Dừng đọc" style="display: none;">
                 <i class="fas fa-stop-circle"></i> Dừng
             </button>
+            <select id="voiceSelector" class="voice-selector" title="Chọn giọng đọc">
+                <option>Đang tải giọng...</option>
+            </select>
             <span class="reading-hint">💡 Bôi đen để đọc từng đoạn</span>
         </div>
         <h3 style="color: #1976d2; margin-bottom: 15px;">${data.title || 'Bài Luyện Đọc'}</h3>
@@ -517,15 +522,91 @@ function hideMessages() {
 let currentUtterance = null;
 let isReading = false;
 
+// Hàm lấy danh sách giọng hay sẵn
+function getAvailableVoices() {
+    const speechSynthesis = window.speechSynthesis;
+    if (!speechSynthesis) return;
+
+    // Lấy danh sách giọng
+    let voices = speechSynthesis.getVoices();
+    
+    // Nếu danh sách trống, đợi sự kiện voiceschanged
+    if (voices.length === 0) {
+        speechSynthesis.onvoiceschanged = function () {
+            voices = speechSynthesis.getVoices();
+            populateVoices(voices);
+        };
+    } else {
+        populateVoices(voices);
+    }
+}
+
+// Hàm điền danh sách giọng vào selector
+function populateVoices(voices) {
+    const voiceSelector = document.getElementById('voiceSelector');
+    if (!voiceSelector) return;
+
+    // Lọc giọng Trung Quốc
+    const chineseVoices = voices.filter(voice => 
+        voice.lang === 'zh-CN' || voice.lang === 'zh-Hans' || voice.name.toLowerCase().includes('chinese')
+    );
+
+    // Nếu không có giọng Trung Quốc, lấy tất cả giọng
+    const voicesToUse = chineseVoices.length > 0 ? chineseVoices : voices;
+
+    // Lưu danh sách giọng
+    availableVoices = voicesToUse;
+
+    // Xóa các option cũ
+    voiceSelector.innerHTML = '';
+
+    // Thêm các option mới
+    voicesToUse.forEach((voice, index) => {
+        const option = document.createElement('option');
+        option.value = voice.name;
+        option.textContent = `${voice.name} (${voice.lang})${voice.default ? ' - Mặc định' : ''}`;
+        voiceSelector.appendChild(option);
+
+        // Chọn giọng đầu tiên theo mặc định
+        if (index === 0 || voice.default) {
+            voiceSelector.value = voice.name;
+            if (!selectedVoice) {
+                selectedVoice = voice;
+            }
+        }
+    });
+}
+
 // Hàm khởi tạo chức năng đọc văn bản
 function initializeTextToSpeechFeatures() {
     const readAllBtn = document.getElementById('readAllBtn');
     const stopReadBtn = document.getElementById('stopReadBtn');
+    const voiceSelector = document.getElementById('voiceSelector');
+
+    // Lấy danh sách giọng hay sẵn
+    getAvailableVoices();
+
+    // Khôi phục giọng đã lưu từ localStorage
+    const savedVoice = localStorage.getItem('selectedVoice');
+    if (voiceSelector && savedVoice) {
+        voiceSelector.value = savedVoice;
+        selectedVoice = availableVoices.find(v => v.name === savedVoice) || availableVoices[0] || null;
+    }
+
+    // Sự kiện chọn giọng đọc
+    if (voiceSelector) {
+        voiceSelector.addEventListener('change', function () {
+            const voiceName = this.value;
+            selectedVoice = availableVoices.find(v => v.name === voiceName) || availableVoices[0] || null;
+            localStorage.setItem('selectedVoice', voiceName);
+        });
+    }
 
     // Sự kiện nút Đọc
     if (readAllBtn) {
         readAllBtn.addEventListener('click', function () {
             const contentElement = document.querySelector('.reading-content');
+
             if (contentElement) {
                 const text = contentElement.innerText;
                 speakText(text);
@@ -574,6 +655,11 @@ function speakText(text) {
     currentUtterance.rate = 0.9; // Tốc độ đọc (0.1 - 10)
     currentUtterance.pitch = 1; // Cao độ giọng (0.1 - 2)
     currentUtterance.volume = 1; // Âm lượng (0 - 1)
+    
+    // Sử dụng giọng đã chọn nếu có
+    if (selectedVoice) {
+        currentUtterance.voice = selectedVoice;
+    }
 
     // Sự kiện khi bắt đầu đọc
     currentUtterance.onstart = function () {
